@@ -7,8 +7,8 @@ class Event extends Component {
     return (
       <div>
         <Row style={RowStyling}>
-          <Col >{name}</Col>
-          <Col >{date}</Col>
+          <Col>{name}</Col>
+          <Col>{date}</Col>
         </Row>
       </div>
     );
@@ -17,6 +17,6 @@ class Event extends Component {
 
 const RowStyling = {
   padding: "12px"
-}
+};
 
 export default Event;

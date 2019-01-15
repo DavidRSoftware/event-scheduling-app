@@ -15,10 +15,8 @@ import {
 } from "reactstrap";
 import Event from "./Event";
 import DatePicker from "react-datepicker";
-
 import BigCalendar from "react-big-calendar";
 import moment from "moment";
-
 import "react-datepicker/dist/react-datepicker.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const _ = require("underscore");
@@ -27,21 +25,13 @@ const localizer = BigCalendar.momentLocalizer(moment);
 class Home extends Component {
   constructor() {
     super();
-
     this.state = {
       modal: false,
       calendarModal: false,
       events: [],
       eventName: "",
       eventDate: new Date(),
-      idNumber: 1,
-      myEventsList: [
-        {
-          start: new Date(),
-          end: new Date(moment().add(1, "days")),
-          title: "Some title"
-        }
-      ]
+      idNumber: 1
     };
   }
 
@@ -74,12 +64,14 @@ class Home extends Component {
           ...this.state.events,
           {
             id: this.state.idNumber,
-            name: this.state.eventName,
-            date: this.state.eventDate,
+            title: this.state.eventName,
+            start: this.state.eventDate,
+            end: this.state.eventDate,
+            allDay: true,
             dateDisplay: this.state.eventDate.toLocaleDateString("en-US")
           }
         ],
-        "date"
+        "start"
       ).reverse(),
       eventName: "",
       eventDate: new Date(),
@@ -94,7 +86,7 @@ class Home extends Component {
   };
 
   render() {
-    const { events, eventName, eventDate, myEventsList } = this.state;
+    const { events, eventName, eventDate } = this.state;
     return (
       <div>
         <Row>
@@ -147,7 +139,6 @@ class Home extends Component {
                     required
                   />
                 </FormGroup>
-
                 <FormGroup>
                   <Label>Date </Label>
                   <div style={datePickerStyle} id="applyFormatting">
@@ -170,18 +161,21 @@ class Home extends Component {
             </Form>
           </Modal>
 
-          <Modal isOpen={this.state.calendarModal} toggle={this.calendarToggle}>
-            <ModalHeader>View Events</ModalHeader>
-            <ModalBody>
+          <Modal
+            isOpen={this.state.calendarModal}
+            toggle={this.calendarToggle}
+            size="lg"
+          >
+            <ModalBody style={calendarModalStyle}>
               <BigCalendar
                 localizer={localizer}
-                events={myEventsList}
+                events={events}
                 startAccessor="start"
                 endAccessor="end"
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" type="submit">
+              <Button color="primary" onClick={this.calendarToggle}>
                 Back
               </Button>
             </ModalFooter>
@@ -192,7 +186,7 @@ class Home extends Component {
             <Col>Event Date</Col>
           </Row>
           {events.map(event => (
-            <Event key={event.id} name={event.name} date={event.dateDisplay} />
+            <Event key={event.id} name={event.title} date={event.dateDisplay} />
           ))}
         </Container>
       </div>
@@ -208,6 +202,10 @@ const HeaderRowStyling = {
 
 const datePickerStyle = {
   display: "block"
+};
+
+const calendarModalStyle = {
+  height: "440px"
 };
 
 export default Home;
